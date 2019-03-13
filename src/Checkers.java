@@ -1,6 +1,13 @@
+import javax.swing.*;
+
 public class Checkers {
     public static void main(String Args[]){
-        System.out.println("Hello!");
-        System.out.println("Update check");
+        Board board = new Board();
+        Square but = new Square();
+
+        board.prepareBoard();
+        board.addButton(but);
+        but.getYlocation();
+        but.getXlocation();
     }
 }
