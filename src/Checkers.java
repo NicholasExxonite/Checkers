@@ -1,13 +1,16 @@
 import javax.swing.*;
 
 public class Checkers {
+    //public static int numSquares = 60;
+
     public static void main(String Args[]){
         Board board = new Board();
-        Square but = new Square();
-
         board.prepareBoard();
-        board.addButton(but);
-        but.getYlocation();
-        but.getXlocation();
+        //Square but = new Square("empty.png");
+
+
+        //board.addSquares(but);
+        //but.getYlocation();
+        //but.getXlocation();
     }
 }

@@ -3,23 +3,31 @@ import java.awt.*;
 
 public class Square {
     //instance variables
-    private JButton square;
+    private JLabel square;
     private ImageIcon squareImg; //= new ImageIcon("red.png");
     private int buttonXpos;
     private int buttonYpos;
 
     //CONSTRUCTOR
-    Square(String x){
-        square = new JButton();
-        squareImg = new ImageIcon(x);
+    Square(){
+        square = new JLabel();
+        squareImg = new ImageIcon("empty.png");
         square.setIcon(squareImg);
+        square.setPreferredSize(new Dimension(60, 60 ));
     }
 
     //METHODS
-
-    public JButton getButton() {
+    //get colour
+    //colour change
+    public void changeColour(String x){
+        squareImg = new ImageIcon(x);
+        square.setIcon(squareImg);
+    }
+    public JLabel getSquare() {
         return square;
     }
+    //Location needs to be fixed, instead of giving pixel location it should
+    //give the location inside the array. (initialization should happen in square class)
     //Y location on the board
     public int getYlocation(){
         System.out.println(buttonYpos);
