@@ -1,16 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Square {
+public class Square extends JComponent{
     //instance variables
-    private JLabel square;
+    private JButton square;
     private ImageIcon squareImg; //= new ImageIcon("red.png");
     private int buttonXpos;
     private int buttonYpos;
 
     //CONSTRUCTOR
     Square(){
-        square = new JLabel();
+        square = new JButton();
         squareImg = new ImageIcon("empty.png");
         square.setIcon(squareImg);
         square.setPreferredSize(new Dimension(60, 60 ));
@@ -23,7 +23,7 @@ public class Square {
         squareImg = new ImageIcon(x);
         square.setIcon(squareImg);
     }
-    public JLabel getSquare() {
+    public JButton getSquare() {
         return square;
     }
     //Location needs to be fixed, instead of giving pixel location it should

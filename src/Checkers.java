@@ -6,11 +6,5 @@ public class Checkers {
     public static void main(String Args[]){
         Board board = new Board();
         board.prepareBoard();
-        //Square but = new Square("empty.png");
-
-
-        //board.addSquares(but);
-        //but.getYlocation();
-        //but.getXlocation();
     }
 }

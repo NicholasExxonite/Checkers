@@ -22,14 +22,15 @@ public class Board {
         checkerBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //array of arrays to hold the squares
         Square[][] squares = new Square[8][8];
-        //array of panels, each holding a single square.
-        backBoard = new JPanel[64];
+        //array of panels, each holding a single square. THIS IS JUST A TEST.
+        /*backBoard = new JPanel[64];
+        int count = 0;*/
 
         //initializing the squares into the board.
         for(int i = 0; i < cols; i++){
             for(int j = 0; j < rows; j++){
                 squares[i][j] = new Square();
-                JPanel panel = new JPanel();
+                //JPanel panel = new JPanel();
                 if (j % 2 == 0 && i % 2 == 0){
                     squares[i][j].changeColour("empty.png");
                 }
@@ -42,14 +43,17 @@ public class Board {
                 else if (j%2 !=0 && i % 2 == 0){
                     squares[i][j].changeColour("empty2.png");
                 }
-                panel.add(squares[i][j].getSquare());
-                backBoard[i+j] = panel;
+                /*panel.add(squares[i][j].getSquare());
+                panel.setPreferredSize(new Dimension(100,100));
+                backBoard[count] = panel;
                 checkerBoard.add(panel);
-                //checkerBoard.add(squares[i][j].getSquare());
+                count++;*/
+                //Seems to be working better with just the squares(JBUTTONS) instead of putting them in Panels, for now.
+                checkerBoard.add(squares[i][j].getSquare());
             }
         }
     }
-    //adding buttons
+    //Not needed now/ wrong.
     public void addSquares(Square button){
         checkerBoard.add(button.getSquare());
     }
