@@ -5,6 +5,6 @@ public class Checkers {
 
     public static void main(String Args[]){
         Board board = new Board();
-        board.prepareBoard();
+
     }
 }
