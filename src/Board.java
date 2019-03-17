@@ -28,10 +28,10 @@ public class Board {
         checkerBoard.setVisible(true);
         checkerBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //array of arrays to hold the squares
+        /*Piece piece = new Piece("empty.png");*/
         Square[][] squares = new Square[8][8];
         //array of panels, each holding a single square. THIS IS JUST A TEST.
         /*backBoard = new JPanel[64];*/
-        int count = 24;
 
         //initializing the squares into the board.
         for(int i = 0; i < cols; i++){
@@ -56,8 +56,10 @@ public class Board {
                 checkerBoard.add(panel);
                 count++;*/
                 //Seems to be working better with just the squares(JBUTTONS) instead of putting them in Panels, for now.
+                //squares[i][j].moveTo();
                 checkerBoard.add(squares[i][j].getSquare());
-                //squares[i][j].addActionListener
+                checkerBoard.repaint();
+
             }
         }
         // Change the colour of squares to red pieces(for the first player)
@@ -75,6 +77,7 @@ public class Board {
                 for(int j = 0; j < rows; j++){
                     if(((i == 5 || i == 7) && j % 2 == 0) || (i == 6 && j % 2 != 0)){
                         squares[i][j].changeColour("white.png");
+
                     }
                 }
             }
