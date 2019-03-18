@@ -2,40 +2,84 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class Square extends JComponent implements ActionListener {
+public class Square extends JButton implements /*ActionListener,*/ MouseListener {
     //instance variables
-    private JButton square;
-    private Piece piece;
+    private JButton square, piece;
     private ImageIcon squareImg; //= new ImageIcon("red.png");
     private int squareXpos, tomoveXpos;
     private int squareYpos, tomoveYpos;
-    /*private String piece;*/
+    private int rowPlacement, colPlacement;
+    private Square[][] board = new Square[8][8];
     private int count;
     private Square array[];
     private String pieceType;
     private Square tomoveSquare;
+    private boolean isPiece;
 
 
     //CONSTRUCTOR
-    Square(String colour) {
+    Square(String colour, int r, int c) {
         this.pieceType = colour;
+        rowPlacement = r;
+        colPlacement = c;
+        //squareXpos = this.getLocation().x;
+        //squareYpos = this.getLocation().y;
+        piece = new JButton();
         square = new JButton();
-        piece = new Piece("empty.png");
-        square.addActionListener(this);
+        //square.addActionListener(this);
         if (colour.equals("red.png") || colour.equals("white.png")) {
-            Piece newPiece = new Piece(colour);
-            square = newPiece.addPiece();
-        } else {
-            this.squareImg = new ImageIcon(colour);
+            /*Piece newPiece = new Piece(colour);*/
+            /*square = newPiece.addPiece();*/
+            //piece = new JButton();
+            this.isPiece = true;
+            this.pieceType = colour;
+            this.squareImg = new ImageIcon(pieceType);
+            piece.setIcon(squareImg);
+            piece.setPreferredSize(new Dimension(100, 100));
+            board[this.rowPlacement][this.colPlacement] = this;
+            /*square.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Piece!");
+                    if(isPiece == true){
+                        squareXpos = square.getLocation().x;
+                        squareYpos = square.getLocation().y;
+                    }
+                    System.out.println(squareXpos + " " + squareYpos);
+                }
+            });*/
+        }
+        else {
+            //square = new JButton();
+            this.isPiece = false;
+            this.pieceType = colour;
+            this.squareImg = new ImageIcon(pieceType);
             square.setIcon(squareImg);
             square.setPreferredSize(new Dimension(100, 100));
+            board[this.rowPlacement][this.colPlacement] = this;
+            /*square.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent m) {
+                    System.out.println("Not a piece!");
+                    if(isPiece == false){
+                        tomoveXpos = square.getLocation().x;
+                        tomoveYpos = square.getLocation().y;
+                    }
+                    *//*
+                    System.out.println(tomoveXpos + " " + tomoveYpos);
+                    square.setLocation(squareXpos, squareYpos);*//*
+                }
+            });*/
         }
         /*this.square.addActionListener(actListener);
         this.square.addActionListener(actListenerTwo);*/
-        count = 1;
         //square.addActionListener(this::actionPerformed);
         //this.toMove(tomoveSquare);
+        /*square.addActionListener(this::actionPerformed);
+        piece.addActionListener(this::actionPerformed);*/
     }
 
     //METHODS
@@ -54,10 +98,17 @@ public class Square extends JComponent implements ActionListener {
     }
 
     public JButton getSquare() {
-        return square;
+        if(isPiece == true){
+            return piece;
+        }
+        else return square;
     }
-
-
+    public int getRowPlacement(){
+        return rowPlacement;
+    }
+    public int getColPlacement(){
+        return colPlacement;
+    }
     public ImageIcon getIcon() {
         return this.getIcon();
     }
@@ -78,23 +129,24 @@ public class Square extends JComponent implements ActionListener {
         return squareXpos;
     }
 
-    @Override
+    /*@Override
     public void actionPerformed(ActionEvent e) {
-        /*if (square.getIcon().toString().equals("red.png") || square.getIcon().toString().equals("white.png")) {
-            squareXpos = square.getLocation().x;
-            squareYpos = square.getLocation().y;
-            System.out.println("I was clicked!: " + square.getLocation().x + " " + square.getLocation().y);
-        } else {
-            tomoveSquare = this;
-            tomoveXpos = square.getLocation().x;
+        Object src = e.getSource();
+        if(src == piece){
+            System.out.println("PIECE");
+            squareXpos = piece.getLocation().x;
+            squareYpos = piece.getLocation().y;
+            System.out.println("Position of piece: " + squareXpos + " " + squareYpos);
+            //Component c =
+        }
+        else if(src == square){
+            System.out.println("SQUARE");
             tomoveYpos = square.getLocation().y;
-            System.out.println("not a piece");
-        }*/
-        System.out.println("not a piece!");
-        tomoveXpos = this.getXlocation();
-        tomoveYpos = this.getYlocation();
-    }
-    public void toMove(Square tomoveSquare) {
+            tomoveXpos = square.getLocation().x;
+            System.out.println("Position of empty square: " + tomoveXpos + " " + tomoveYpos);
+        }
+    }*/
+    public void toMove(Square tomoveSquare){
 
     }
     public int getTomoveXpos(){
@@ -102,6 +154,23 @@ public class Square extends JComponent implements ActionListener {
     }
     public int getTomoveYpos(){
         return tomoveYpos;
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
     /*@Override
     public void actionPerformed(ActionEvent e) {
