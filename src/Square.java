@@ -99,8 +99,8 @@ public class Square extends JButton implements /*ActionListener,*/ MouseListener
     }
     void toMove(int x, int y){
         if(isPiece){
-            selectedX = x;
-            selectedY = y;
+            //selectedX = x;
+            //selectedY = y;
             selectedRow = this.squareRow;
             selectedCol = this.squareCol;
             System.out.println("Make your move.");
@@ -111,12 +111,12 @@ public class Square extends JButton implements /*ActionListener,*/ MouseListener
             return;
         }
         if(test[0] > 0){
-            curX = this.getLocation().x;
-            curY = this.getLocation().y;
+            //curX = this.getLocation().x;
+            //curY = this.getLocation().y;
             int currentRow = squareRow;
             int currentCol = squareCol;
             square.setLocation(curX, curY);
-            //makeMove(toX, toY, selectedX, selectedY/*squareRow, squareCol, selectedRow, selectedCol*/);
+            makeMove(selectedX, selectedY, currentRow, currentCol/*squareRow, squareCol, selectedRow, selectedCol*/);
         }
     }
 
@@ -138,8 +138,8 @@ public class Square extends JButton implements /*ActionListener,*/ MouseListener
             System.out.println("You clicked a Piece.");
             test[0] = 1;
             test[1] = 1;
-            selectedX = e.getX();
-            selectedY = e.getY();
+            //selectedX = e.getX();
+            //selectedY = e.getY();
             selectedRow = this.squareRow;
             selectedCol = this.squareCol;
         }
