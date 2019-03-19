@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseAdapter;
 
-public class Board extends JFrame implements MouseListener, ActionListener {
+public class Board extends JFrame /*implements MouseListener, ActionListener*/ {
     //instance variables
     private JFrame checkerBoard;
     private BasicOptionPaneUI.ButtonActionListener actionListener;
@@ -22,6 +22,7 @@ public class Board extends JFrame implements MouseListener, ActionListener {
     private Square square;
     private Square[][] squares;
     //private int numSquares = 64;
+    //Kak da nakaram borda razbere che e kliknat buton. Borda da e statichen, kato cukna na buton da vikne metod koito da kazva koi buton e kliknal
 
     //METHODS
 
@@ -31,7 +32,8 @@ public class Board extends JFrame implements MouseListener, ActionListener {
         checkerBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         checkerBoard.setSize(500, 500);
         checkerBoard.setVisible(true);
-        checkerBoard.addMouseListener(this);
+        checkerBoard.setResizable(false);
+        /*checkerBoard.addMouseListener(this);*/
         //checkerBoard = new JPanel();
         checkerBoard.setLayout(new GridLayout(8, 8));
         //array of arrays to hold the squares
@@ -41,20 +43,24 @@ public class Board extends JFrame implements MouseListener, ActionListener {
 
         for(int i = 0; i < cols; i++){
             for(int j = 0; j < rows; j++){
-                squares[i][j] = new Square("empty.png", i, j);
+                //squares[i][j] = new Square("empty.png", i, j, checkerBoard);
                 //squares[i][j].addMouseListener(this);
 
                 if (j % 2 == 0 && i % 2 == 0){
-                    squares[i][j].changeColour("empty2.png");
+                    //squares[i][j].changeColour("empty2.png");
+                    squares[i][j] = new Square("empty2.png", i, j);
                 }
                 else if(j % 2 == 0 && i % 2 !=0){
-                    squares[i][j].changeColour("empty.png");
+                    squares[i][j] = new Square("empty.png", i, j);
+                    /*squares[i][j].changeColour("empty.png");*/
                 }
                 else if (j%2 != 0 && i % 2 != 0){
-                    squares[i][j].changeColour("empty2.png");
+                    /*squares[i][j].changeColour("empty2.png");*/
+                    squares[i][j] = new Square("empty2.png", i, j);
                 }
                 else if (j%2 !=0 && i % 2 == 0){
-                    squares[i][j].changeColour("empty.png");
+                    /*squares[i][j].changeColour("empty.png");*/
+                    squares[i][j] = new Square("empty.png", i, j);
                 }
                 if(((i == 0 || i == 2) && j % 2 != 0) || (i == 1 && j % 2 == 0)){
                     //squares[i][j].changeColour("red.png");
@@ -66,45 +72,32 @@ public class Board extends JFrame implements MouseListener, ActionListener {
                     squares[i][j] = new Square("white.png",i, j);
                     //squares[i][j].addMouseListener(this);
                 }
-                squares[i][j].addMouseListener(this);
-                squares[i][j].addActionListener(this::actionPerformed);
+                /*squares[i][j].addMouseListener(this);
+                squares[i][j].addActionListener(this::actionPerformed);*/
+               // squares[i][j].updateBoard(squares);
                 checkerBoard.add(squares[i][j].getSquare());
-                checkerBoard.repaint();
+                squares[i][j].updateBoard(squares);
             }
         }
-
-/*        checkerBoard.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                System.out.println("Yoooo");
-            }
-        });*/
-       /* for(Square[] s: squares){
-            for(Square ss: s){
-                ss.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
-                        System.out.println("Button!");
-                    }
-                });
-            }
-        }*/
-        checkerBoard.setResizable(false);
         checkerBoard.setVisible(true);
         checkerBoard.repaint();
-
     }
     //Not needed now/ wrong.
     public void addSquares(Square button) {
         checkerBoard.add(button.getSquare());
     }
+    void update(){
+        for(int i = 0; i < rows; i++){
+            for(int j =0; j< cols; i++){
 
-    @Override
+            }
+        }
+    }
+
+   /* @Override
     public void mouseClicked(MouseEvent e) {
         System.out.println("Button pressed!");
-       /* Component c = checkerBoard.getComponentAt(e.getX(), e.getY());
+        Component c = checkerBoard.getComponentAt(e.getX(), e.getY());
         Object o = e.getSource();
         System.out.println("yoo");
         if(c instanceof JButton){
@@ -116,14 +109,15 @@ public class Board extends JFrame implements MouseListener, ActionListener {
         }
         if(c instanceof Square){
             System.out.println("yoo");
-            //Component p = ((JPanel) c).findComponentAt(e.getX(), e.getY());
+            Component p = ((JPanel) c).findComponentAt(e.getX(), e.getY());
             Point parentLocation = c.getParent().getLocation();
             Component n = p.getComponentAt(parentLocation);
             int x = e.getX();
             int y = e.getY();
             System.out.println(x + y );
-        }*/
-    }
+        }
+    }*/
+/*
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -144,6 +138,7 @@ public class Board extends JFrame implements MouseListener, ActionListener {
     public void mouseExited(MouseEvent e) {
 
     }
+*/
 
     public void actionPerformed(ActionEvent e) {
         System.out.println("Woah");

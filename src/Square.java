@@ -9,77 +9,51 @@ public class Square extends JButton implements /*ActionListener,*/ MouseListener
     //instance variables
     private JButton square, piece;
     private ImageIcon squareImg; //= new ImageIcon("red.png");
-    private int squareXpos, tomoveXpos;
-    private int squareYpos, tomoveYpos;
-    private int rowPlacement, colPlacement;
+    private int squareRow, selectedRow;
+    private int squareCol, selectedCol;
+    private int selectedX, selectedY, curX, curY;
     private Square[][] board = new Square[8][8];
-    private int count;
-    private Square array[];
     private String pieceType;
     private Square tomoveSquare;
     private boolean isPiece;
-
+    private static int[] test = new int[2];
+    //ako nqma izbrano -1 i -1, ako ima izbrano shte e 1 i 1
+    //proverqvash dali kordinatite sa razlichni ot -1 i -1, znachi ima selectnato i proverqvame dali e piece.
+    // ako nqma nishto selectnato i e piece selectvam piece
+    //ako nqma selectnato i ne e piece, nishto ne pravim
+    // ako imam selectatno neshto i ne e piece, premestvam piece na novite kordinati i triem piece
 
     //CONSTRUCTOR
     Square(String colour, int r, int c) {
         this.pieceType = colour;
-        rowPlacement = r;
-        colPlacement = c;
+        squareRow = r;
+        squareCol = c;
         //squareXpos = this.getLocation().x;
         //squareYpos = this.getLocation().y;
-        piece = new JButton();
+        //piece = new JButton();
         square = new JButton();
+        board[r][c] = this;
+        square.setBounds(20, 20, 164, 164);
+        square.addMouseListener(this);
         //square.addActionListener(this);
         if (colour.equals("red.png") || colour.equals("white.png")) {
-            /*Piece newPiece = new Piece(colour);*/
-            /*square = newPiece.addPiece();*/
-            //piece = new JButton();
             this.isPiece = true;
             this.pieceType = colour;
             this.squareImg = new ImageIcon(pieceType);
-            piece.setIcon(squareImg);
-            piece.setPreferredSize(new Dimension(100, 100));
-            board[this.rowPlacement][this.colPlacement] = this;
-            /*square.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Piece!");
-                    if(isPiece == true){
-                        squareXpos = square.getLocation().x;
-                        squareYpos = square.getLocation().y;
-                    }
-                    System.out.println(squareXpos + " " + squareYpos);
-                }
-            });*/
+            this.square.setIcon(squareImg);
+
         }
         else {
             //square = new JButton();
+            /*test[0] = -1;
+            test[1] = -1;*/
             this.isPiece = false;
             this.pieceType = colour;
             this.squareImg = new ImageIcon(pieceType);
-            square.setIcon(squareImg);
-            square.setPreferredSize(new Dimension(100, 100));
-            board[this.rowPlacement][this.colPlacement] = this;
-            /*square.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent m) {
-                    System.out.println("Not a piece!");
-                    if(isPiece == false){
-                        tomoveXpos = square.getLocation().x;
-                        tomoveYpos = square.getLocation().y;
-                    }
-                    *//*
-                    System.out.println(tomoveXpos + " " + tomoveYpos);
-                    square.setLocation(squareXpos, squareYpos);*//*
-                }
-            });*/
+            this.square.setIcon(squareImg);
+
         }
-        /*this.square.addActionListener(actListener);
-        this.square.addActionListener(actListenerTwo);*/
-        //square.addActionListener(this::actionPerformed);
-        //this.toMove(tomoveSquare);
-        /*square.addActionListener(this::actionPerformed);
-        piece.addActionListener(this::actionPerformed);*/
+
     }
 
     //METHODS
@@ -96,72 +70,90 @@ public class Square extends JButton implements /*ActionListener,*/ MouseListener
         squareImg = new ImageIcon(x);
         square.setIcon(squareImg);
     }
-
     public JButton getSquare() {
-        if(isPiece == true){
+        /*if(isPiece == true){
             return piece;
         }
-        else return square;
+        else return square;*/
+        return square;
     }
-    public int getRowPlacement(){
-        return rowPlacement;
-    }
-    public int getColPlacement(){
-        return colPlacement;
-    }
+
     public ImageIcon getIcon() {
         return this.getIcon();
     }
-
-    //Location needs to be fixed, instead of giving pixel location it should
-    //give the location inside the array. (initialization should happen in square class)
-    //Y location on the board
-    public int getYlocation() {
-        System.out.println(squareYpos);
-        squareYpos = square.getLocation().y;
-        return squareYpos;
+    public Square[][] getBoard(){
+        return board;
+    }
+    public void movement(Square sq){
+        this.square = sq;
     }
 
-    //X loaction on the board
-    public int getXlocation() {
-        System.out.println(squareXpos);
-        squareXpos = square.getLocation().x;
-        return squareXpos;
+    public int getSquareRow(){
+        return squareRow;
     }
-
-    /*@Override
-    public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
-        if(src == piece){
-            System.out.println("PIECE");
-            squareXpos = piece.getLocation().x;
-            squareYpos = piece.getLocation().y;
-            System.out.println("Position of piece: " + squareXpos + " " + squareYpos);
-            //Component c =
+    public int getSelectedCol(){
+        return squareCol;
+    }
+    void updateBoard(Square[][] s){
+        s = board;
+    }
+    void toMove(int x, int y){
+        if(isPiece){
+            selectedX = x;
+            selectedY = y;
+            selectedRow = this.squareRow;
+            selectedCol = this.squareCol;
+            System.out.println("Make your move.");
+            return;
         }
-        else if(src == square){
-            System.out.println("SQUARE");
-            tomoveYpos = square.getLocation().y;
-            tomoveXpos = square.getLocation().x;
-            System.out.println("Position of empty square: " + tomoveXpos + " " + tomoveYpos);
+        if(test[0] < 0) {
+            System.out.println("Click the piece you want to move.");
+            return;
         }
-    }*/
-    public void toMove(Square tomoveSquare){
+        if(test[0] > 0){
+            curX = this.getLocation().x;
+            curY = this.getLocation().y;
+            int currentRow = squareRow;
+            int currentCol = squareCol;
+            square.setLocation(curX, curY);
+            //makeMove(toX, toY, selectedX, selectedY/*squareRow, squareCol, selectedRow, selectedCol*/);
+        }
+    }
 
+    void makeMove(/*Square sq*/int fromRow, int fromCol, int toRow, int toCol){
+       // board[toRow][toCol] = board[fromRow][fromCol];
+        /*int tempX = selectX;
+        int tempY = selectY;
+        //this.square.setLocation(sq.getLocation());
+        square.setLocation(selectX, selectY);
+        sq.setLocation(sqX, sqY);
+        */
+        board[fromRow][fromCol] = board[toCol][toRow];
+        repaint();
     }
-    public int getTomoveXpos(){
-        return tomoveXpos;
-    }
-    public int getTomoveYpos(){
-        return tomoveYpos;
+    @Override
+    public void mousePressed(MouseEvent e) {
+        e.getSource();
+        if(isPiece){
+            System.out.println("You clicked a Piece.");
+            test[0] = 1;
+            test[1] = 1;
+            selectedX = e.getX();
+            selectedY = e.getY();
+            selectedRow = this.squareRow;
+            selectedCol = this.squareCol;
+        }
+        if (!isPiece){
+            System.out.println("You clicked an empty square");
+            test[0] = -1;
+            test[1] = -1;
+        }
+        toMove(selectedX, selectedY);
     }
 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-    }
-    @Override
-    public void mousePressed(MouseEvent e) {
     }
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -172,30 +164,5 @@ public class Square extends JButton implements /*ActionListener,*/ MouseListener
     @Override
     public void mouseExited(MouseEvent e) {
     }
-    /*@Override
-    public void actionPerformed(ActionEvent e) {
-        *//*if(count % 2 != 0){
-            squareXpos = square.getLocation().x;
-            squareYpos = square.getLocation().y;
-            System.out.println("Square 1 location: " + squareXpos + " "+ squareYpos);
-        }
-        if(count % 2 == 0){
-            System.out.println("2222");
-        }
-        if(count > 10){
-            count = 1;
-        }
-        count++;*//*
 
-
-         *//*if(array[0] == null){
-            array[0] = this;
-            System.out.println("First sq :" + this.getXlocation() + this.getYlocation());
-        }
-        if(array[0] != null){
-            array[1] = this;
-            array[0] = null;
-            System.out.println("Second sq :" + this.getYlocation() + this.getYlocation());
-        }*//*
-    }*/
 }

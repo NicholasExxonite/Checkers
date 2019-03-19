@@ -15,9 +15,7 @@ public class Piece extends JComponent implements ActionListener {
         piece.setIcon(image);
         //piece.addActionListener(this::actionPerformed);
     }
-    public Piece getPiece(){
-        return this;
-    }
+
     public JButton addPiece(){
         /*this.image = new ImageIcon(colour);
         piece.setIcon(image);*/
