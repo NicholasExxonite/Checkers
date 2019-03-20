@@ -1,168 +1,95 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class Square extends JButton implements /*ActionListener,*/ MouseListener {
-    //instance variables
-    private JButton square, piece;
-    private ImageIcon squareImg; //= new ImageIcon("red.png");
-    private int squareRow, selectedRow;
-    private int squareCol, selectedCol;
-    private int selectedX, selectedY, curX, curY;
+public class Square extends JButton {
+    //instance variable for the image to be used.
+    private ImageIcon image;
+    //rows and cols of each square;
+    private int row, col;
+    //a board array of arrays so we can have the same location of each square as in the Board class.
     private Square[][] board = new Square[8][8];
-    private String pieceType;
-    private Square tomoveSquare;
+    private int selectedRow, selectedCol;
+    //the type of the square.
+    private String type; //Can be NONE, RED, WHITE, etc.
+    //a boolean check to see if the square is empty or a piece.
     private boolean isPiece;
-    private static int[] test = new int[2];
-    //ako nqma izbrano -1 i -1, ako ima izbrano shte e 1 i 1
-    //proverqvash dali kordinatite sa razlichni ot -1 i -1, znachi ima selectnato i proverqvame dali e piece.
-    // ako nqma nishto selectnato i e piece selectvam piece
-    //ako nqma selectnato i ne e piece, nishto ne pravim
-    // ako imam selectatno neshto i ne e piece, premestvam piece na novite kordinati i triem piece
 
-    //CONSTRUCTOR
-    Square(String colour, int r, int c) {
-        this.pieceType = colour;
-        squareRow = r;
-        squareCol = c;
-        //squareXpos = this.getLocation().x;
-        //squareYpos = this.getLocation().y;
-        //piece = new JButton();
-        square = new JButton();
+    //constructor for the Square object
+    public Square(int c, int r, String t){
+        //save the information for each square from the Board to the instance variables in Square class
+        // so we can manipulate them easily
+        row = r;
+        col = c;
+        type = t;
+        //this board is identical to the checkerBoard from Board class
         board[r][c] = this;
-        square.setBounds(20, 20, 164, 164);
-        square.addMouseListener(this);
-        //square.addActionListener(this);
-        if (colour.equals("red.png") || colour.equals("white.png")) {
-            this.isPiece = true;
-            this.pieceType = colour;
-            this.squareImg = new ImageIcon(pieceType);
-            this.square.setIcon(squareImg);
-
-        }
-        else {
-            //square = new JButton();
-            /*test[0] = -1;
-            test[1] = -1;*/
+        //Creating the empty squares, if the parameter t(type) from Board was "NONE" then it's an empty square
+        //put them on the correct position depending on the row and col.
+        if(type.equals("NONE"))
+        {
             this.isPiece = false;
-            this.pieceType = colour;
-            this.squareImg = new ImageIcon(pieceType);
-            this.square.setIcon(squareImg);
-
+            if(row % 2 == 0 && col % 2 == 0 || row % 2 != 0 && col % 2 != 0){
+                image = new ImageIcon("empty2.png");
+                this.setIcon(image);
+            }
+            if(row % 2 != 0 && col % 2 == 0 || row % 2 == 0 && col % 2 != 0){
+                image = new ImageIcon("empty.png");
+                this.setIcon(image);
+            }
+        }
+        //if the t(type) inputed from Board is "WHITE", then create white pieces.
+        if(type.equals("WHITE")){
+            image = new ImageIcon("white.png");
+            this.setIcon(image);
+            this.isPiece = true;
         }
 
     }
+    //Method, called in Board to make a move.
+    public void toMove(Square sq){
+        int x = sq.getLocation().x;
+        int y = sq.getLocation().y;
 
-    //METHODS
-    /*public Square pieceColour(String colour){
-        this.pieceType = colour;
-        if(pieceType.equals("red.png")|| pieceType.equals("white.png")){
-            Piece newPiece = new Piece(pieceType);
-            square = newPiece.addPiece(pieceType);
-        }
-        return this;
-    }*/
-    //colour change
-    public void changeColour(String x) {
-        squareImg = new ImageIcon(x);
-        square.setIcon(squareImg);
-    }
-    public JButton getSquare() {
-        /*if(isPiece == true){
-            return piece;
-        }
-        else return square;*/
-        return square;
-    }
-
-    public ImageIcon getIcon() {
-        return this.getIcon();
-    }
-    public Square[][] getBoard(){
-        return board;
-    }
-    public void movement(Square sq){
-        this.square = sq;
-    }
-
-    public int getSquareRow(){
-        return squareRow;
-    }
-    public int getSelectedCol(){
-        return squareCol;
-    }
-    void updateBoard(Square[][] s){
-        s = board;
-    }
-    void toMove(int x, int y){
-        if(isPiece){
-            //selectedX = x;
-            //selectedY = y;
-            selectedRow = this.squareRow;
-            selectedCol = this.squareCol;
-            System.out.println("Make your move.");
-            return;
-        }
-        if(test[0] < 0) {
-            System.out.println("Click the piece you want to move.");
-            return;
-        }
-        if(test[0] > 0){
-            //curX = this.getLocation().x;
-            //curY = this.getLocation().y;
-            int currentRow = squareRow;
-            int currentCol = squareCol;
-            square.setLocation(curX, curY);
-            makeMove(selectedX, selectedY, currentRow, currentCol/*squareRow, squareCol, selectedRow, selectedCol*/);
-        }
-    }
-
-    void makeMove(/*Square sq*/int fromRow, int fromCol, int toRow, int toCol){
-       // board[toRow][toCol] = board[fromRow][fromCol];
-        /*int tempX = selectX;
-        int tempY = selectY;
-        //this.square.setLocation(sq.getLocation());
-        square.setLocation(selectX, selectY);
-        sq.setLocation(sqX, sqY);
-        */
-        board[fromRow][fromCol] = board[toCol][toRow];
+        sq.setLocation(this.getLocation());
+        this.setLocation(x, y);
+        //repaint the board after the movement.
         repaint();
     }
-    @Override
-    public void mousePressed(MouseEvent e) {
-        e.getSource();
-        if(isPiece){
-            System.out.println("You clicked a Piece.");
-            test[0] = 1;
-            test[1] = 1;
-            //selectedX = e.getX();
-            //selectedY = e.getY();
-            selectedRow = this.squareRow;
-            selectedCol = this.squareCol;
-        }
-        if (!isPiece){
-            System.out.println("You clicked an empty square");
-            test[0] = -1;
-            test[1] = -1;
-        }
-        toMove(selectedX, selectedY);
+
+    public boolean isPiece() {
+        return isPiece;
     }
 
+    public String getType() {
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-    @Override
-    public void mouseExited(MouseEvent e) {
+        return type;
     }
 
+    public int getRow() {
+        return row;
+    }
+    public void setRow(int r){
+        this.row = r;
+    }
+    public void setCol(int c){
+        this.col = c;
+    }
+    public int getCol() {
+        return col;
+    }
+
+    public int getSelectedRow() {
+        return selectedRow;
+    }
+
+    public int getSelectedCol() {
+        return selectedCol;
+    }
+
+    public void setSelectedCol(int col) {
+        selectedCol = col;
+    }
+
+    public void setSelectedRow(int row) {
+        selectedRow = row;
+    }
 }

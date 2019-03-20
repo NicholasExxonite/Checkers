@@ -1,146 +1,101 @@
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_COLOR_BURNPeer;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
-import javax.swing.plaf.basic.BasicOptionPaneUI;
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class Board extends JFrame /*implements MouseListener, ActionListener*/ {
-    //instance variables
-    private JFrame checkerBoard;
-    private BasicOptionPaneUI.ButtonActionListener actionListener;
-    private int squareXpos, tomoveXpos;
-    private int squareYpos, tomoveYpos;
-    //private MouseListener mouseListener;
-    //Panels not needed for now. Were just a test.
-    //panel array to hold the positions of each square
-    //private JPanel checkerBoard;
-    private int rows = 8;
-    private int cols = 8;
-    private Square square;
-    private Square[][] squares;
-    //private int numSquares = 64;
-    //Kak da nakaram borda razbere che e kliknat buton. Borda da e statichen, kato cukna na buton da vikne metod koito da kazva koi buton e kliknal
+public class Board extends JFrame  {
+    //number of rows and cols
+    private int rows = 8, cols = 8;
+    //an array of arrays to hold each square with it's correct position.
+    private Square[][] checkerBoard = new Square[8][8];
+    //variables that store the information needed for a movement.
+    // selRow and selCol are the rows and cols of the piece that is to be moved.
+    // toRow and toCol are the rows and cols of the empty square that the piece is to be moved to.
+    private int toRow, toCol, selRow, selCol;
+    //A boolean variable that stores information whether a piece is selected or not.
+    private boolean selected;
 
-    //METHODS
+//Constructor for the Board window. Title is chosen in the main class.
+    public Board(String title) {
+        super(title);
+        setSize(500, 500);
+        setResizable(false);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(8, 8));
+        //Feeling in the checkerBoard array with squares and pieces.
+        setUpBoard();
+        //Add the checkerBoard
+        addCheckerboard();
+        this.setVisible(true);
+        //repainting the window after all the changes.
+        this.repaint();
 
-    //preparing the board
-    Board(){
-        checkerBoard = new JFrame();
-        checkerBoard.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        checkerBoard.setSize(500, 500);
-        checkerBoard.setVisible(true);
-        checkerBoard.setResizable(false);
-        /*checkerBoard.addMouseListener(this);*/
-        //checkerBoard = new JPanel();
-        checkerBoard.setLayout(new GridLayout(8, 8));
-        //array of arrays to hold the squares
-        /*Piece piece = new Piece("empty.png");*/
-        squares = new Square[8][8];
-        //initializing the squares into the board.
 
-        for(int i = 0; i < cols; i++){
-            for(int j = 0; j < rows; j++){
-                //squares[i][j] = new Square("empty.png", i, j, checkerBoard);
-                //squares[i][j].addMouseListener(this);
-
-                if (j % 2 == 0 && i % 2 == 0){
-                    //squares[i][j].changeColour("empty2.png");
-                    squares[i][j] = new Square("empty2.png", i, j);
-                }
-                else if(j % 2 == 0 && i % 2 !=0){
-                    squares[i][j] = new Square("empty.png", i, j);
-                    /*squares[i][j].changeColour("empty.png");*/
-                }
-                else if (j%2 != 0 && i % 2 != 0){
-                    /*squares[i][j].changeColour("empty2.png");*/
-                    squares[i][j] = new Square("empty2.png", i, j);
-                }
-                else if (j%2 !=0 && i % 2 == 0){
-                    /*squares[i][j].changeColour("empty.png");*/
-                    squares[i][j] = new Square("empty.png", i, j);
-                }
-                if(((i == 0 || i == 2) && j % 2 != 0) || (i == 1 && j % 2 == 0)){
-                    //squares[i][j].changeColour("red.png");
-                    squares[i][j] = new Square("red.png",i ,j);
-                    //squares[i][j].addMouseListener(this);
-                }
-                if(((i == 5 || i == 7) && j % 2 == 0) || (i == 6 && j % 2 != 0)){
-                    //squares[i][j].changeColour("white.png");
-                    squares[i][j] = new Square("white.png",i, j);
-                    //squares[i][j].addMouseListener(this);
-                }
-                /*squares[i][j].addMouseListener(this);
-                squares[i][j].addActionListener(this::actionPerformed);*/
-               // squares[i][j].updateBoard(squares);
-                checkerBoard.add(squares[i][j].getSquare());
-                squares[i][j].updateBoard(squares);
-            }
-        }
-        checkerBoard.setVisible(true);
-        checkerBoard.repaint();
     }
-    //Not needed now/ wrong.
-    public void addSquares(Square button) {
-        checkerBoard.add(button.getSquare());
-    }
-    void update(){
-        for(int i = 0; i < rows; i++){
-            for(int j =0; j< cols; i++){
+    //Called in the constructor. This method fills up an array of arrays(checkerBoard) with squares/pieces.
+    private void setUpBoard() {
+        for (int c = 0; c < cols; c++) {
+            for (int r = 0; r < rows; r++) {
+                //put white pieces in their correct positions.
+                if (((c == 5 || c == 7) && r % 2 == 0) || (c == 6 && r % 2 != 0)) {
+                    Square square = new Square(c, r, "WHITE");
+                    checkerBoard[c][r] = square;
+                    //Action listeners that checks if a white piece is clicked.
+                    //if it's clicked then set selected=true, indicating that a piece was selected
+                    // selRow and selCol are set to the current row and col of the square that was clicked.
+                    square.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            selected = true;
+                            selRow = square.getRow();
+                            selCol = square.getCol();
+                            //simple console prints that help with orientation and debugging.
+                            System.out.println("Piece!");
+                            if(selected){
+                                System.out.println("Chose where to move");
+                            }
+                        }
+                    });
+                    //Fill up checkerBoard with empty squares. White and black empty squares' position is determined
+                    // in the Square constructor.
+                } else {
+                    Square square = new Square(c, r, "NONE");
+                    checkerBoard[c][r] = square;
+                    //Actionlistener for the empty squares. If no piece has been selected, aka selected=false
+                    //do nothing, if a piece has been selected, aka selected=true, then
+                    //save the row and col of the empty square that was clicked to the instance variables toRow, toCol
+                    //and call the toMove method from Square class, using as a parameter the previously clicked and saved piece.
+                    //Finally set selected to false, so we can then do other moves.
+                    square.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println("empty square");
+                            if(!selected){
+                                System.out.println("Chose a piece to move");
+                            }
+                            else {
+                                toRow = square.getRow();
+                                toCol = square.getCol();
 
+                                square.toMove(checkerBoard[selCol][selRow]);
+                                System.out.println("Piece moved");
+                                selected = false;
+                            }
+                        }
+                    });
+                }
             }
         }
     }
-
-   /* @Override
-    public void mouseClicked(MouseEvent e) {
-        System.out.println("Button pressed!");
-        Component c = checkerBoard.getComponentAt(e.getX(), e.getY());
-        Object o = e.getSource();
-        System.out.println("yoo");
-        if(c instanceof JButton){
-            System.out.println("yo");
-            Point parentLoc = c.getLocation();
-            int x = parentLoc.x;
-            int y = parentLoc.y;
-            System.out.println(x + y);
+    // a method that adds the checkerBoard to the Board window.
+    private void addCheckerboard(){
+        for(int r =0; r < rows; r++){
+            for(int c = 0; c < cols; c++){
+                add(checkerBoard[r][c]);
+            }
         }
-        if(c instanceof Square){
-            System.out.println("yoo");
-            Component p = ((JPanel) c).findComponentAt(e.getX(), e.getY());
-            Point parentLocation = c.getParent().getLocation();
-            Component n = p.getComponentAt(parentLocation);
-            int x = e.getX();
-            int y = e.getY();
-            System.out.println(x + y );
-        }
-    }*/
-/*
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-*/
-
-    public void actionPerformed(ActionEvent e) {
-        System.out.println("Woah");
-    }
 }
